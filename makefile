@@ -1,5 +1,5 @@
-randmst: randmst.cpp min_heap.cpp
-	g++ min_heap.cpp randmst.cpp -o randmst -std=c++11
+randmst: kk.cpp max_heap.cpp
+	g++ max_heap.cpp kk.cpp -o kk -std=c++11
 
-min_heap_test: min_heap_test.cpp min_heap.cpp
-	g++ min_heap.cpp min_heap_test.cpp -o min_heap_test -std=c++11
+max_heap_test: max_heap_test.cpp max_heap.cpp
+	g++ max_heap.cpp max_heap_test.cpp -o max_heap_test -std=c++11
