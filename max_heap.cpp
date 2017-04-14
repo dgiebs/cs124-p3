@@ -82,7 +82,7 @@ Leaf MinHeap::Peek(){
 	return _heap[0];
 }
 
-Leaf MinHeap::ExtractMin(){
+Leaf MinHeap::ExtractMax(){
 	int length = _heap.size();
 
 	Leaf temp = Peek();
