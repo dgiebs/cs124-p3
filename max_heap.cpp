@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void MaxHeap::BuildHeap(vector<unsigned long long> nodes, int length){
+void MaxHeap::BuildHeap(vector<signed long long> nodes, int length){
 
 	for (int i = 0; i < length; ++i){
 		// copy nodes into heap
@@ -64,17 +64,17 @@ void MaxHeap::HeapUp(int index){
 	}
 }
 
-unsigned long long MaxHeap::Peek(){
+signed long long MaxHeap::Peek(){
 	return _heap[0];
 }
 
-unsigned long long MaxHeap::ExtractMax(){
+signed long long MaxHeap::ExtractMax(){
 	int length = _heap.size();
 
 	if (length == 0){
 		return 0;
 	}
-	unsigned long long temp = _heap[0];
+	signed long long temp = _heap[0];
 
 	_heap[0] = _heap[length-1];
 	_heap.pop_back();
@@ -82,7 +82,7 @@ unsigned long long MaxHeap::ExtractMax(){
 	return temp;
 }
 
-void MaxHeap::Insert(unsigned long long n){
+void MaxHeap::Insert(signed long long n){
     int length = _heap.size();
     _heap.push_back(n);
 
