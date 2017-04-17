@@ -1,4 +1,4 @@
-randmst: kk.cpp max_heap.cpp
+kk: kk.cpp max_heap.cpp
 	g++ max_heap.cpp kk.cpp -o kk -std=c++11
 
 max_heap_test: max_heap_test.cpp max_heap.cpp

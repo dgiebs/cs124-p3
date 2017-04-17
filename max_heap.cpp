@@ -1,10 +1,10 @@
 #include <cmath>
 #include <iostream>
-#include "min_heap.h"
+#include "max_heap.h"
 
 using namespace std;
 
-void MinHeap::BuildHeap(vector<Leaf> nodes, int length){
+void MaxHeap::BuildHeap(vector<Leaf> nodes, int length){
 	_indexmap.resize(length + 1);
 	for (int i = 0; i < length; ++i){
 		// copy nodes into heap
@@ -18,14 +18,14 @@ void MinHeap::BuildHeap(vector<Leaf> nodes, int length){
 	Heapify();
 }
 
-void MinHeap::Heapify(){
+void MaxHeap::Heapify(){
 	int length = _heap.size();
 	for (int i = length - 1; i >= 0; --i){
 		HeapDown(i);
 	}
 }
 
-void MinHeap::HeapDown(int index){
+void MaxHeap::HeapDown(int index){
 	int length = _heap.size();
 	int smallestChild = D * index + 1;
 	int largestChild = D * index + D;
@@ -39,7 +39,7 @@ void MinHeap::HeapDown(int index){
 	int lowest = index;
 
 	for (int i = smallestChild; i <= min(largestChild, length - 1); i++){
-		if (get<0>(_heap[lowest]) > get<0>(_heap[i])){
+		if (get<0>(_heap[lowest]) < get<0>(_heap[i])){
 			lowest = i;
 		}
 	}
@@ -59,11 +59,11 @@ void MinHeap::HeapDown(int index){
 	}
 }
 
-void MinHeap::HeapUp(int index){
+void MaxHeap::HeapUp(int index){
 	int parent = (int) floor((index - 1) / D);
 
 	// check whether swap is necessary
-	if (get<0>(_heap[parent]) > get<0>(_heap[index])){
+	if (get<0>(_heap[parent]) < get<0>(_heap[index])){
 		// update indexmap
 		int indexID = get<1>(_heap[index]);
 		int parentID = get<1>(_heap[parent]);
@@ -78,11 +78,11 @@ void MinHeap::HeapUp(int index){
 	}
 }
 
-Leaf MinHeap::Peek(){
+Leaf MaxHeap::Peek(){
 	return _heap[0];
 }
 
-Leaf MinHeap::ExtractMax(){
+Leaf MaxHeap::ExtractMax(){
 	int length = _heap.size();
 
 	Leaf temp = Peek();
@@ -109,7 +109,7 @@ Leaf MinHeap::ExtractMax(){
 	}
 }
 
-bool MinHeap::DecreaseKey(int ID, float newWeight){
+bool MaxHeap::DecreaseKey(int ID, float newWeight){
 	// refernce indexmap to find location in heap of desired node
 	int index_of_node = _indexmap[ID];
 	float curr_weight = get<0>(_heap[index_of_node]);
@@ -126,7 +126,7 @@ bool MinHeap::DecreaseKey(int ID, float newWeight){
 
 
 // useful method for debugging
-void MinHeap::PrintHeap(){
+void MaxHeap::PrintHeap(){
 	for (int i = 0; i < _heap.size(); i++){
 		cout << "(" << get<0>(_heap[i]) << ", " << get<1>(_heap[i]) << ")  ";
 	}
@@ -142,12 +142,12 @@ void MinHeap::PrintHeap(){
 	cout << "\n";
 }
 
-bool MinHeap::IsEmpty(){
+bool MaxHeap::IsEmpty(){
 	return _heap.empty();
 }
 
 // return IDs of nodes remaining in the tree
-vector<int> MinHeap::IDsRemaining(){
+vector<int> MaxHeap::IDsRemaining(){
 	vector<int> remaining;
 	for (int i = 1; i < _indexmap.size(); ++i){
 		if (_indexmap[i] != -1){
