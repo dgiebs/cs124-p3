@@ -8,13 +8,14 @@
 #include <stdint.h>
 #include <random>
 #include <fstream>
+#include <cstdlib>
 
 using namespace std;
 
 int main( int argc, char *argv[])
 {
 
-	int size = 100;
+	int size = 5;
 
 	if (argc != 2){
 		printf("Incorrect number of parameters\n");
@@ -41,17 +42,26 @@ int main( int argc, char *argv[])
 	// init MaxHeap object
 	MaxHeap mh;
 
-	vector<Leaf> node_leaves;
-	for (int i = 0; i < size; i++){
-		node_leaves.push_back(make_tuple(x[i], i + 1));
-	}
-
-	mh.BuildHeap(node_leaves, size);
+	mh.BuildHeap(x, size);
 
 	mh.PrintHeap();
 
-	for (int i = 0; i < size; i++){
-		Leaf tmp = mh.ExtractMax();
-		printf("num: %llu \n", get<0>(tmp));
+
+
+	for (int i = 0; i < size-1; i++){
+		unsigned long long max_1 = mh.ExtractMax();
+		unsigned long long max_2 = mh.ExtractMax();
+		unsigned long long diff;
+		if (max_1>max_2){
+			diff = max_1-max_2;
+		}
+		else {
+			diff = max_2-max_1;
+		}
+		mh.Insert(diff);
+		mh.PrintHeap();
 	}
+	mh.PrintHeap();
+	unsigned long long max_1 = mh.ExtractMax();
+	printf("num: %llu \n", max_1);
 }
