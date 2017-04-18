@@ -47,9 +47,9 @@ int main( int argc, char *argv[])
 		x[i] = atoi(str.c_str());
 	}
 
-	int a_1 = method_a_1(x, 100);
-	int a_2 = method_a_2(x, 100);
-	int a_3 = method_a_3(x, 100);
+	int a_1 = method_a_1(x, 1000);
+	int a_2 = method_a_2(x, 1000);
+	int a_3 = method_a_3(x, 25000);
 	signed long long pure_kk = kk(x);
 	printf("a_1 : %i \na_2 : %i \na_3: %i \npure kk: %lli \n", a_1, a_2, a_3, pure_kk);
 }
@@ -162,7 +162,8 @@ int method_a_3(vector<signed long long> x, int iterations){
 			residue = temp_residue;
 		}
 		else{
-			float p = exp (-(abs(temp_residue)-abs(residue))/(i+1));
+			float t_iter = 10000000000*pow(0.8, floor(i/300));
+			float p = exp (-(abs(temp_residue)-abs(residue))/t_iter);
 			bernoulli_distribution bern(p);
 			bool anneal = bern(gen);
 			if (anneal) {
