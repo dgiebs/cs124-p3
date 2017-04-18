@@ -31,7 +31,7 @@ int method_b_2(vector<signed long long>, int);
 int method_b_3(vector<signed long long>, int);
 
 int size = 100;
-int niters = 25000;
+int niters = 250;
 
 int main( int argc, char *argv[])
 {
