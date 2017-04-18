@@ -162,6 +162,7 @@ int method_a_3(vector<signed long long> x, int iterations){
 			residue = temp_residue;
 		}
 		else{
+			// "temperature" function
 			float t_iter = 10000000000*pow(0.8, floor(i/300));
 			float p = exp (-(abs(temp_residue)-abs(residue))/t_iter);
 			bernoulli_distribution bern(p);
