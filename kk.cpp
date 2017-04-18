@@ -25,10 +25,16 @@ int method_a_2(vector<signed long long>, int);
 int method_a_3(vector<signed long long>, int);
 signed long long kk(vector<signed long long>);
 
+// Prepartitioning
+int method_b_1(vector<signed long long>, int);
+int method_b_2(vector<signed long long>, int);
+int method_b_3(vector<signed long long>, int);
+
+int size = 100;
+int niters = 25000;
+
 int main( int argc, char *argv[])
 {
-
-	int size = 5;
 
 	if (argc != 2){
 		printf("Incorrect number of parameters\n");
@@ -47,9 +53,9 @@ int main( int argc, char *argv[])
 		x[i] = atoi(str.c_str());
 	}
 
-	int a_1 = method_a_1(x, 25000);
-	int a_2 = method_a_2(x, 25000);
-	int a_3 = method_a_3(x, 25000);
+	int a_1 = method_a_1(x, niters);
+	int a_2 = method_a_2(x, niters);
+	int a_3 = method_a_3(x, niters);
 	signed long long pure_kk = kk(x);
 	printf("a_1 : %i \na_2 : %i \na_3: %i \npure kk: %lli \n", a_1, a_2, a_3, pure_kk);
 }
