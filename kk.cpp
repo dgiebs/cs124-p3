@@ -49,7 +49,7 @@ int main( int argc, char *argv[])
 
 	int a_1 = method_a_1(x, 1000);
 	int a_2 = method_a_2(x, 1000);
-	int a_3 = method_a_3(x, 25000);
+	int a_3 = method_a_3(x, 1000);
 	signed long long pure_kk = kk(x);
 	printf("a_1 : %i \na_2 : %i \na_3: %i \npure kk: %lli \n", a_1, a_2, a_3, pure_kk);
 }
@@ -123,6 +123,7 @@ int method_a_2(vector<signed long long> x, int iterations){
 int method_a_3(vector<signed long long> x, int iterations){
 
     uniform_int_distribution<> rand_idx(0, x.size()-1);
+
 	vector<int> s (x.size(), 0);
 	for (int j = 0; j < s.size(); ++j){
 		s[j] = s_rand(gen);
@@ -130,10 +131,13 @@ int method_a_3(vector<signed long long> x, int iterations){
 			s[j] = -1;
 		}
 	}
+
 	int residue = 0;
 	for (int j = 0; j < x.size(); ++j){
 		residue += s[j]*x[j];
 	}
+	
+	int residue_orig = residue;
 
 	for (int i = 0; i < iterations; ++i){
 		// for (int j = 0; j < x.size(); ++j){
@@ -150,6 +154,7 @@ int method_a_3(vector<signed long long> x, int iterations){
 		// following the algorithm-flip 1 or two elements of S
 		int choosing = s_rand(gen);
 		int temp_residue = residue - 2*s[s_i]*x[s_i];
+		// 1/2 chance you change 2
 		if (choosing == 0){
 			temp_residue -= 2*s[s_j]*x[s_j];
 		}
@@ -176,8 +181,12 @@ int method_a_3(vector<signed long long> x, int iterations){
 				residue = temp_residue;
 			}
 		}
+
+		if (abs(residue)<abs(residue_orig)){
+			residue_orig = residue;
+		}
 	}
-	return abs(residue);
+	return abs(residue_orig);
 }
 
 signed long long kk(vector<signed long long> x){
