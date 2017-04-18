@@ -210,3 +210,38 @@ signed long long kk(vector<signed long long> x){
 	signed long long final = mh.ExtractMax();
 	return final;
 }
+
+int vec_prime(vector<signed long long> x, vector<signed long long> p)
+{
+	vector<int> x_prime (size, 0);
+	int residue = numeric_limits<int>::max();
+	for (int i = 0; i < size; ++i){
+		x_prime[i] = 
+
+		for (int j = 0; j < s.size(); ++j){
+			s[j] = s_rand(gen);
+			if (s[j] == 0){
+				s[j] = -1;
+			}
+		}
+		int tmp_residue = 0;
+		for (int j = 0; j < x.size(); ++j){
+			tmp_residue += s[j]*x[j];
+		}
+		tmp_residue = abs(tmp_residue);
+		if (tmp_residue < residue){
+			residue = tmp_residue;
+		}
+	}
+	return residue;
+}
+
+int method_b_2(vector<signed long long>, int)
+{
+
+}
+
+int method_b_3(vector<signed long long>, int)
+{
+
+}
