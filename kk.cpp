@@ -14,11 +14,16 @@
 
 using namespace std;
 
+int size = 100;
+int niters = 25000;
+
 // random numbers are generated throughout the program and its helper functions
 random_device rd;
 mt19937 gen(rd());
 uniform_int_distribution<> s_rand(0, 1);
-uniform_int_distribution<signed long long> dis(0, 1000000000000);
+// uniform_int_distribution<signed long long> dis(0, 100);
+
+uniform_int_distribution<signed long long> dis_vp(0, size-1);
 
 int method_a_1(vector<signed long long>, int);
 int method_a_2(vector<signed long long>, int);
@@ -26,12 +31,11 @@ int method_a_3(vector<signed long long>, int);
 signed long long kk(vector<signed long long>);
 
 // Prepartitioning
-int method_b_1(vector<signed long long>, int);
-int method_b_2(vector<signed long long>, int);
-int method_b_3(vector<signed long long>, int);
+signed long long method_b_1(vector<signed long long>, int);
+signed long long method_b_2(vector<signed long long>, int);
+signed long long method_b_3(vector<signed long long>, int);
 
-int size = 100;
-int niters = 25000;
+
 
 int main( int argc, char *argv[])
 {
@@ -48,16 +52,38 @@ int main( int argc, char *argv[])
 	vector<signed long long> x (size, 0);
 
 	// add integers to vector
+	// for (int i = 0; i < size; i++){
+	// 	infile >> str;
+	// 	x[i] = atoi(str.c_str());
+	// 	printf("x[%d] : %llu\n", i, x[i]);
+	// }
 	for (int i = 0; i < size; i++){
 		infile >> str;
-		x[i] = atoi(str.c_str());
+		x[i] = stoll(str.c_str());
+		// printf("x[%d] : %llu\n", i, x[i]);
 	}
+
+	// printf("\n\n");
 
 	int a_1 = method_a_1(x, niters);
 	int a_2 = method_a_2(x, niters);
 	int a_3 = method_a_3(x, niters);
+
+	// Why is this relevant? It doesn't make sense to run kk on a vector whose
+	// prepartitioning isn't enforced by vec_prime
 	signed long long pure_kk = kk(x);
 	printf("a_1 : %i \na_2 : %i \na_3: %i \npure kk: %lli \n", a_1, a_2, a_3, pure_kk);
+	// printf("pure kk : %llu\n", pure_kk);
+
+
+	signed long long b_1 = method_b_1(x, niters);
+	printf("b_1 : %llu\n", b_1);
+
+	int b_2 = method_b_2(x, niters);
+	printf("b_2 : %i\n", b_2);
+
+	int b_3 = method_b_3(x, niters);
+	printf("b_3 : %i\n", b_3);
 }
 
 int method_a_1(vector<signed long long> x, int iterations){
@@ -71,10 +97,14 @@ int method_a_1(vector<signed long long> x, int iterations){
 			if (s[j] == 0){
 				s[j] = -1;
 			}
+			// printf("x[%d] : %llu\n", j, x[j]);
+			// printf("s[%d] : %d\n", j, s[j]);
+
 		}
 		int tmp_residue = 0;
 		for (int j = 0; j < x.size(); ++j){
 			tmp_residue += s[j]*x[j];
+			// printf("tr: %d\n", tmp_residue);
 		}
 		tmp_residue = abs(tmp_residue);
 		if (tmp_residue < residue){
@@ -204,13 +234,16 @@ signed long long kk(vector<signed long long> x){
 	for (int i = 0; i < x.size()-1; i++){
 		signed long long max_1 = mh.ExtractMax();
 		signed long long max_2 = mh.ExtractMax();
-		signed long long diff;
-		if (max_1>max_2){
-			diff = max_1-max_2;
-		}
-		else {
-			diff = max_2-max_1;
-		}
+		signed long long diff = abs(max_2 - max_1);
+		// signed long long diff;
+		// if (max_1>max_2){
+		// 	diff = max_1-max_2;
+		// 	// printf("%llu\n", diff);
+		// }
+		// else {
+		// 	diff = max_2-max_1;
+		// 	// printf("-%llu\n", diff);
+		// }
 		mh.Insert(diff);
 	}
 	signed long long final = mh.ExtractMax();
@@ -226,26 +259,26 @@ vector<signed long long> vec_prime(vector<signed long long> x, vector<signed lon
 	return x_prime;
 }
 
-int method_b_1(vector<signed long long> x, int iterations){
+signed long long method_b_1(vector<signed long long> x, int iterations){
 	
 	// Creating initial random solution
 	vector<signed long long> s (size, 0);
 	for (int i = 0; i < size; ++i){
-		s[i] = dis(gen);
+		s[i] = dis_vp(gen);
 	}
 
-	// Create new sequence x_prime that enforces the prepartitioning from p
+	// Create new sequence x_prime that enforces the prepartitioning from s
 	vector<signed long long> x_prime = vec_prime(x, s);
 	
-	int residue = kk(x_prime);
+	signed long long residue = kk(x_prime);
 
 	for (int i = 0; i < iterations; ++i){
-		vector<signed long long> s_prime(size, 0);
+		// vector<signed long long> s_prime(size, 0);
 		for (int i = 0; i < size; ++i){
-			s_prime[i] = dis(gen);
+			s[i] = dis_vp(gen);
 		}
 	
-		int temp_residue = kk(s_prime);
+		signed long long temp_residue = kk(vec_prime(x, s));
 		if (temp_residue < residue){
 			residue = temp_residue;
 		}
@@ -253,34 +286,32 @@ int method_b_1(vector<signed long long> x, int iterations){
 	return residue;
 }
 
-int method_b_2(vector<signed long long> x, int iterations){
+signed long long method_b_2(vector<signed long long> x, int iterations){
 
 	// Creating initial random solution
 	vector<signed long long> s (size, 0);
 	for (int i = 0; i < size; ++i){
-		s[i] = dis(gen);
+		s[i] = dis_vp(gen);
 	}
 
 	// Create new sequence x_prime that enforces the prepartitioning from p
 	vector<signed long long> x_prime = vec_prime(x, s);
 	
-	int residue = kk(x_prime);
-
-	uniform_int_distribution<> rand_idx(0, size);
+	signed long long residue = kk(x_prime);
 
 	for (int i = 0; i < iterations; ++i){
 
-		int s_i = rand_idx(gen);
+		int s_i = dis_vp(gen);
 		int s_j;
 		//make sure j != i
 		do {
-			s_j = rand_idx(gen);
+			s_j = dis_vp(gen);
 		} while (s[s_i] == s_j);
 
 		signed long long prev_ss1 = s[s_i];
 		s[s_i] = s_j;
 		
-		int temp_residue = kk(s);
+		signed long long temp_residue = kk(vec_prime(x, s));
 		if (temp_residue < residue){
 			residue = temp_residue;
 		}
@@ -291,36 +322,34 @@ int method_b_2(vector<signed long long> x, int iterations){
 	return residue;
 }
 
-int method_b_3(vector<signed long long> x, int iterations)
+signed long long method_b_3(vector<signed long long> x, int iterations)
 {
 	// Creating initial random solution
 	vector<signed long long> s (size, 0);
 	for (int i = 0; i < size; ++i){
-		s[i] = dis(gen);
+		s[i] = dis_vp(gen);
 	}
 
 
 	// Create new sequence x_prime that enforces the prepartitioning from p
 	vector<signed long long> x_prime = vec_prime(x, s);
-	int res_s = kk(x_prime);
+	signed long long res_s = kk(x_prime);
 
-	uniform_int_distribution<> rand_idx(0, size);
-
-	int final_res = res_s;
+	signed long long final_res = res_s;
 
 	for (int i = 0; i < iterations; ++i){
 
-		int s_i = rand_idx(gen);
+		int s_i = dis_vp(gen);
 		int s_j;
 		//make sure j != i
 		do {
-			s_j = rand_idx(gen);
+			s_j = dis_vp(gen);
 		} while (s[s_i] == s_j);
 
 		signed long long prev_ssi = s[s_i];
 		s[s_i] = s_j;
 		
-		int res_s_prime = kk(s);
+		signed long long res_s_prime = kk(s);
 		if (res_s_prime < res_s){
 			final_res = res_s_prime;
 			// s being changed to s_prime is already accomplished by s[s_i] = s_j
