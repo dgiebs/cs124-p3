@@ -63,8 +63,6 @@ int main( int argc, char *argv[])
 		// printf("x[%d] : %llu\n", i, x[i]);
 	}
 
-	// printf("\n\n");
-
 	int a_1 = method_a_1(x, niters);
 	int a_2 = method_a_2(x, niters);
 	int a_3 = method_a_3(x, niters);
@@ -76,6 +74,7 @@ int main( int argc, char *argv[])
 	// printf("pure kk : %llu\n", pure_kk);
 
 
+	// Printing immediately after running means seeing results as they come #instantgratification
 	signed long long b_1 = method_b_1(x, niters);
 	printf("b_1 : %llu\n", b_1);
 
@@ -84,6 +83,13 @@ int main( int argc, char *argv[])
 
 	int b_3 = method_b_3(x, niters);
 	printf("b_3 : %i\n", b_3);
+
+	// Who wants to wait for all three of these to finish? Not me
+	// int b_1 = method_b_1(x, niters);
+	// int b_2 = method_b_2(x, niters);
+	// int b_3 = method_b_3(x, niters);
+
+	// printf("b_1 : %i \nb_2 : %i \nb_3: %i \n", b_1, b_2, b_3);
 }
 
 int method_a_1(vector<signed long long> x, int iterations){
@@ -335,10 +341,11 @@ signed long long method_b_3(vector<signed long long> x, int iterations)
 	vector<signed long long> x_prime = vec_prime(x, s);
 	signed long long res_s = kk(x_prime);
 
+	// Otherwise known as s'' or s_prime_prime
 	signed long long final_res = res_s;
 
 	for (int i = 0; i < iterations; ++i){
-
+		// Random neighbor
 		int s_i = dis_vp(gen);
 		int s_j;
 		//make sure j != i
@@ -347,11 +354,12 @@ signed long long method_b_3(vector<signed long long> x, int iterations)
 		} while (s[s_i] == s_j);
 
 		signed long long prev_ssi = s[s_i];
+		// Make s a random neighbor of itself, essentially turning it into s'
 		s[s_i] = s_j;
 		
-		signed long long res_s_prime = kk(s);
+		signed long long res_s_prime = kk(vec_prime(x, s));
 		if (res_s_prime < res_s){
-			final_res = res_s_prime;
+			res_s = res_s_prime;
 			// s being changed to s_prime is already accomplished by s[s_i] = s_j
 		}
 		else {
@@ -364,8 +372,9 @@ signed long long method_b_3(vector<signed long long> x, int iterations)
 			bernoulli_distribution bern(p);
 			bool anneal = bern(gen);
 			if (anneal) {
+				// Change s (back) to s'
 				s[s_i] = s_j;
-				res_s = kk(s);
+				res_s = kk(vec_prime(x,s));
 			}
 		}
 

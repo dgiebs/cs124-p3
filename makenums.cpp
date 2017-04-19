@@ -15,10 +15,8 @@ int main () {
 	for (int i = 0; i < size; i++){
 		signed long long x = dis(gen);
 		myfile << x << "\n";
-		printf("%llu\n", x);
 	}
 
-	
 	myfile.close();
 	return 0;
 }
