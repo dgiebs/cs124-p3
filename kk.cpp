@@ -379,6 +379,7 @@ signed long long method_b_3(vector<signed long long> x, int iterations)
 			// "temperature" function
 			float t_iter = 10000000000*pow(0.8, floor(i/300));
 			float p = exp (-(abs(res_s_prime)-abs(res_s))/t_iter);
+			printf("%f \n", p);
 			bernoulli_distribution bern(p);
 			bool anneal = bern(gen);
 			if (anneal) {
